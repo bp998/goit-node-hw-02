@@ -36,6 +36,7 @@
   "imports": {
     "#models/*": "./models/*",
     "#validators/*": "./validators/*",
-    "#controllers/*": "./controllers/*"
+    "#controllers/*": "./controllers/*",
+    "#middlewares/*": "./middlewares/*"
   }
 }

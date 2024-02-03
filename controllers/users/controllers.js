@@ -41,3 +41,17 @@ export const login = async (req, res, next) => {
     next(error);
   }
 };
+export const logout = async (req, res, next) => {
+  try {
+    const userId = res.locals.user._id;
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+    user.token = null;
+    await user.save();
+    return res.status(200).json({ message: "Successfully logged out" });
+  } catch (error) {
+    next(error);
+  }
+};
