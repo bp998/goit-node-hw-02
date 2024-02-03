@@ -23,11 +23,3 @@ export const userSchema = new Schema(
   },
   { versionKey: false, timestamps: true }
 );
-
-userSchema.methods.setPassword = async function (password) {
-  this.password = await bcrypt.hash(password, 5);
-};
-
-userSchema.methods.validatePassword = async function (password) {
-  return await bcrypt.compare(password, this.password);
-};
