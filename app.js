@@ -4,7 +4,8 @@ import cors from "cors";
 
 import { startServer } from "./server.js";
 
-import contactsRouter from "./routes/api/router.js";
+import contactsRouter from "./routes/api/contactsRouter.js";
+import usersRouter from "./routes/api/usersRouter.js";
 
 const app = express();
 
@@ -14,6 +15,7 @@ app.use(logger(formatsLogger));
 app.use(cors());
 app.use(express.json());
 
+app.use("/api/users", usersRouter);
 app.use("/api/contacts", contactsRouter);
 
 app.use((req, res) => {
