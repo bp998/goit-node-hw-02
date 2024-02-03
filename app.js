@@ -1,9 +1,9 @@
 import express from "express";
 import logger from "morgan";
 import cors from "cors";
-
+import setJWTStrategy from "./config/jwt.js";
 import { startServer } from "./server.js";
-
+import authMiddleware from "./middlewares/jwt.js";
 import contactsRouter from "./routes/api/contactsRouter.js";
 import usersRouter from "./routes/api/usersRouter.js";
 
@@ -15,7 +15,9 @@ app.use(logger(formatsLogger));
 app.use(cors());
 app.use(express.json());
 
-app.use("/api/users", usersRouter);
+setJWTStrategy();
+
+app.use("/api/users", authMiddleware, usersRouter);
 app.use("/api/contacts", contactsRouter);
 
 app.use((req, res) => {
