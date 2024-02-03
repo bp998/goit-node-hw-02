@@ -55,3 +55,18 @@ export const logout = async (req, res, next) => {
     next(error);
   }
 };
+
+export const current = async (req, res, next) => {
+  try {
+    const userId = res.locals.user._id;
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+    return res
+      .status(200)
+      .json({ email: user.email, subscription: user.subscription });
+  } catch (error) {
+    next(error);
+  }
+};

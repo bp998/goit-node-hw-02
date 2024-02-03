@@ -11,5 +11,6 @@ router.get("/", authMiddleware, (req, res, next) => {
 router.post("/signup", validateUser, controllers.signup);
 router.post("/login", validateUser, controllers.login);
 router.get("/logout", authMiddleware, controllers.logout);
+router.get("/current", authMiddleware, controllers.current);
 
 export default router;
