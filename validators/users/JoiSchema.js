@@ -7,6 +7,7 @@ const docSchema = Joi.object({
     .valid("starter", "pro", "business")
     .default("starter"),
   token: Joi.string().default(null),
+  avatarURL: Joi.string(),
 });
 
 export const validateUser = (req, res, next) => {

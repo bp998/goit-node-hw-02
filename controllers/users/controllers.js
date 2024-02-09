@@ -1,6 +1,7 @@
 import * as helpers from "./helpers.js";
 import { User } from "#models/User.js";
 import jwt from "jsonwebtoken";
+import gravatar from "gravatar";
 
 export const signup = async (req, res, next) => {
   const { email, password } = req.body;
@@ -10,9 +11,12 @@ export const signup = async (req, res, next) => {
   }
   try {
     const newUser = new User({ email, password });
+    newUser.avatarURL = gravatar.url(email, { s: "200" }, true);
     await newUser.setPassword(password);
     await newUser.save();
-    res.status(201).json({ user: { ...req.body } });
+    res
+      .status(201)
+      .json({ user: { ...req.body, avatarURL: newUser.avatarURL } });
   } catch (error) {
     next(error);
   }
