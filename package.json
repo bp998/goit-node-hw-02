@@ -42,6 +42,7 @@
     "#models/*": "./models/*",
     "#validators/*": "./validators/*",
     "#controllers/*": "./controllers/*",
-    "#middlewares/*": "./middlewares/*"
+    "#middlewares/*": "./middlewares/*",
+    "#config/*": "./config/*"
   }
 }

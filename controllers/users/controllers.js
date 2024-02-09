@@ -2,6 +2,7 @@ import * as helpers from "./helpers.js";
 import { User } from "#models/User.js";
 import jwt from "jsonwebtoken";
 import gravatar from "gravatar";
+import { get } from "http";
 
 export const signup = async (req, res, next) => {
   const { email, password } = req.body;
@@ -69,6 +70,25 @@ export const current = async (req, res, next) => {
     return res
       .status(200)
       .json({ email: user.email, subscription: user.subscription });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const avatars = async (req, res, next) => {
+  try {
+    const userId = res.locals.user._id;
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+    await helpers.updateAvatar(req, user);
+    const getAvatarURL = await helpers.getAvatarURL(userId);
+
+    return res.status(200).json({
+      message: "Avatar updated successfully",
+      avatarURL: getAvatarURL,
+    });
   } catch (error) {
     next(error);
   }

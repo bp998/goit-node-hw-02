@@ -16,6 +16,7 @@ export default function setJWTStrategy() {
         if (!user) {
           return done(new Error("User not found"));
         }
+
         return done(null, user);
       } catch (error) {
         return done(error);
