@@ -2,7 +2,6 @@ import * as helpers from "./helpers.js";
 import { User } from "#models/User.js";
 import jwt from "jsonwebtoken";
 import gravatar from "gravatar";
-import { get } from "http";
 
 export const signup = async (req, res, next) => {
   const { email, password } = req.body;
