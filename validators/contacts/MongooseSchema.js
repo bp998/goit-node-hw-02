@@ -1,6 +1,6 @@
-import mongoose from "mongoose";
+import { Schema } from "mongoose";
 
-export const contactSchema = new mongoose.Schema(
+export const contactSchema = new Schema(
   {
     name: {
       type: String,
@@ -15,6 +15,10 @@ export const contactSchema = new mongoose.Schema(
     favorite: {
       type: Boolean,
       default: false,
+    },
+    owner: {
+      type: Schema.Types.ObjectId,
+      ref: "user",
     },
   },
   { versionKey: false, timestamps: true }
