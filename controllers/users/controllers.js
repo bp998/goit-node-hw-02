@@ -11,7 +11,7 @@ export const signup = async (req, res, next) => {
   }
   try {
     const newUser = new User({ email, password });
-    newUser.avatarURL = gravatar.url(email, { s: "200" }, true);
+    newUser.avatarURL = gravatar.url(email, { s: "200", d: "identicon" }, true);
     await newUser.setPassword(password);
     await newUser.save();
     res
