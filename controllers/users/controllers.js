@@ -32,7 +32,6 @@ export const login = async (req, res, next) => {
         expiresIn: "1h",
       });
       return res.json({
-        token: token,
         user: { ...req.body },
       });
     }

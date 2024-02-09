@@ -1,8 +1,8 @@
 import Joi from "joi";
 
 const docSchema = Joi.object({
-  password: Joi.string().required("Password is required"),
-  email: Joi.string().required("Email is required"),
+  password: Joi.string().min(3).max(25).required("Password is required"),
+  email: Joi.string().email().required("Email is required"),
   subscryption: Joi.string()
     .valid("starter", "pro", "business")
     .default("starter"),
