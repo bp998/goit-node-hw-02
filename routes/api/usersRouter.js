@@ -13,5 +13,6 @@ router.post("/login", validateUser, controllers.login);
 router.get("/logout", authMiddleware, controllers.logout);
 router.get("/current", authMiddleware, controllers.current);
 router.patch("/avatars", authMiddleware, controllers.avatars);
+router.get("/verify/:verificationToken", controllers.verify);
 
 export default router;

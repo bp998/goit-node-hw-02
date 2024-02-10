@@ -8,6 +8,8 @@ const docSchema = Joi.object({
     .default("starter"),
   token: Joi.string().default(null),
   avatarURL: Joi.string(),
+  verify: Joi.boolean().default(false),
+  verificationToken: Joi.string().required("Verify token is required"),
 });
 
 export const validateUser = (req, res, next) => {
