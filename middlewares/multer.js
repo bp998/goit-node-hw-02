@@ -24,7 +24,7 @@ export const uploadMiddleware = multer({
   limits: { fileSize: 1024 * 1024 * 5 }, // 5MB
 });
 
-export const isImageAndTransform = async (path, filename) =>
+export const isImageAndTransform = (path, filename) =>
   new Promise((resolve, reject) => {
     Jimp.read(path, async (err, image) => {
       if (err) {

@@ -36,6 +36,7 @@ export const login = async (req, res, next) => {
         expiresIn: "1h",
       });
       return res.json({
+        token: token,
         user: { ...req.body },
       });
     }
@@ -81,13 +82,14 @@ export const avatars = async (req, res, next) => {
     if (!user) {
       return res.status(401).json({ message: "Unauthorized" });
     }
-    await helpers.updateAvatar(req, user);
-    const getAvatarURL = await helpers.getAvatarURL(userId);
-
-    return res.status(200).json({
-      message: "Avatar updated successfully",
-      avatarURL: getAvatarURL,
-    });
+    const getAvatarURL = await helpers.updateAvatar(req, user);
+    if (getAvatarURL) {
+      return res.status(200).json({
+        message: "Avatar updated successfully",
+        avatarURL: getAvatarURL,
+      });
+    }
+    return res.status(400).json({ message: "Problem with updating avatar" });
   } catch (error) {
     next(error);
   }
