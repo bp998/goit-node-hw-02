@@ -113,9 +113,35 @@ export const verify = async (req, res, next) => {
       return res.status(404).json({ message: "User not found" });
     }
     user.verificationToken = "done";
+    // nie moglem ustawić verificationToken na null, bo w modelu jest required
+    // nie wiem czy to błąd zadania, czy ja nie rozumiem jak to obejść
     user.verify = true;
     await user.save();
     return res.status(200).json({ message: "Verification successful" });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const reVerify = async (req, res, next) => {
+  try {
+    const { email } = req.body;
+    if (!email) {
+      return res.status(400).json({ message: "missing required field email" });
+    }
+    const user = await User.findOne({ email });
+    if (user.verificationToken === "done") {
+      return res
+        .status(400)
+        .json({ message: "Verification has already been passed" });
+    }
+    const token = await user.setVerificationToken();
+    const verifyEmail = await helpers.sendVerificationEmail(email, token);
+    if (!verifyEmail) {
+      return res.status(400).json({ message: "Problem with sending email" });
+    }
+    await user.save();
+    return res.status(200).json({ message: "Verification email sent" });
   } catch (error) {
     next(error);
   }
