@@ -1,4 +1,5 @@
 import { Schema } from "mongoose";
+import { v4 } from "uuid";
 
 export const userSchema = new Schema(
   {
@@ -34,3 +35,7 @@ export const userSchema = new Schema(
   },
   { versionKey: false, timestamps: true }
 );
+
+userSchema.methods.setVerificationToken = function () {
+  return (this.verificationToken = v4());
+};

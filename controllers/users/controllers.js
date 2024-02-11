@@ -13,10 +13,16 @@ export const signup = async (req, res, next) => {
     const newUser = new User({ email, password });
     newUser.avatarURL = gravatar.url(email, { s: "200", d: "identicon" }, true);
     await newUser.setPassword(password);
+    const token = await newUser.setVerificationToken();
+    const verifyEmail = await helpers.sendVerificationEmail(email, token);
+    if (!verifyEmail) {
+      return res.status(400).json({ message: "Problem with sending email" });
+    }
     await newUser.save();
-    res
-      .status(201)
-      .json({ user: { ...req.body, avatarURL: newUser.avatarURL } });
+    res.status(201).json({
+      message: "Verification email sent",
+      user: { ...req.body, avatarURL: newUser.avatarURL },
+    });
   } catch (error) {
     next(error);
   }
@@ -26,6 +32,9 @@ export const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
+    if (user.verify === false) {
+      return res.status(401).json({ message: "Please verify your email" });
+    }
     if (!user) {
       return res.status(401).json({ message: "Email is wrong" });
     }
@@ -103,7 +112,7 @@ export const verify = async (req, res, next) => {
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
-    user.verificationToken = null;
+    user.verificationToken = "done";
     user.verify = true;
     await user.save();
     return res.status(200).json({ message: "Verification successful" });
