@@ -1,4 +1,5 @@
 import { Schema } from "mongoose";
+import { v4 } from "uuid";
 
 export const userSchema = new Schema(
   {
@@ -23,6 +24,18 @@ export const userSchema = new Schema(
     avatarURL: {
       type: String,
     },
+    verify: {
+      type: Boolean,
+      default: false,
+    },
+    verificationToken: {
+      type: String,
+      required: [true, "Verify token is required"],
+    },
   },
   { versionKey: false, timestamps: true }
 );
+
+userSchema.methods.setVerificationToken = function () {
+  return (this.verificationToken = v4());
+};

@@ -1,5 +1,6 @@
 import { User } from "#models/User.js";
 import { uploadMiddleware, isImageAndTransform } from "#middlewares/multer.js";
+import { sendEmail } from "#config/nodemailer.js";
 
 export const findUser = (email) => User.findOne({ email }).lean();
 
@@ -28,6 +29,21 @@ export const updateAvatar = async (req, user) => {
     const avatarURL = "/avatars/" + file.filename;
     await User.findByIdAndUpdate(user.id, { avatarURL });
     return avatarURL;
+  } catch (err) {
+    throw new Error(err.message);
+  }
+};
+
+export const sendVerificationEmail = async (email, verificationToken) => {
+  const mailOptions = {
+    from: "potyrala.bartosz@gmail.com",
+    to: email,
+    subject: "Verify your account",
+    text: `Click to verify your account => http://localhost:3000/api/users/verify/${verificationToken}`,
+  };
+  try {
+    await sendEmail(mailOptions);
+    return true;
   } catch (err) {
     throw new Error(err.message);
   }
