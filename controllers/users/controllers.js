@@ -32,11 +32,11 @@ export const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
-    if (user.verify === false) {
-      return res.status(401).json({ message: "Please verify your email" });
-    }
     if (!user) {
       return res.status(401).json({ message: "Email is wrong" });
+    }
+    if (user.verify === false) {
+      return res.status(401).json({ message: "Please verify your email" });
     }
     const isPasswordValid = await user.validatePassword(password);
     if (isPasswordValid) {
@@ -113,8 +113,6 @@ export const verify = async (req, res, next) => {
       return res.status(404).json({ message: "User not found" });
     }
     user.verificationToken = "done";
-    // nie moglem ustawić verificationToken na null, bo w modelu jest required
-    // nie wiem czy to błąd zadania, czy ja nie rozumiem jak to obejść
     user.verify = true;
     await user.save();
     return res.status(200).json({ message: "Verification successful" });
@@ -130,7 +128,7 @@ export const reVerify = async (req, res, next) => {
       return res.status(400).json({ message: "missing required field email" });
     }
     const user = await User.findOne({ email });
-    if (user.verificationToken === "done") {
+    if (user.verify) {
       return res
         .status(400)
         .json({ message: "Verification has already been passed" });
